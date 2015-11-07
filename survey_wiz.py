@@ -205,7 +205,7 @@ def create_survey():
         abort(401)
     else:
         flash("You are now creating a survey!")
-    return redirect(url_for('index'))
+    return render_template('create_survey.html')
 
 """
 TODO
