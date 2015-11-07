@@ -16,6 +16,7 @@ from datetime import datetime
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack
 from werkzeug import check_password_hash, generate_password_hash
+from flask_bootstrap import Bootstrap
 
 # configuration
 """
@@ -28,6 +29,7 @@ SECRET_KEY = 'development key'
 # create our little application :)
 app = Flask(__name__)
 mongo = MongoClient()
+Bootstrap(app)
 app.config.from_object(__name__)
 #app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
 
@@ -111,9 +113,8 @@ def before_request():
 
 @app.route('/')
 def index():    
-    print "haha"
     if g.user != None:
-        return render_template('hello.html', username=str(g.user[unicode("username")]))
+        return render_template('index.html', username=str(g.user[unicode("username")]))
     return redirect(url_for('login'))
 
 
@@ -252,11 +253,16 @@ def register():
             error = 'The username is already taken'
         else:
             db = get_db()
+            is_surveyor = None
+            if 'is_surveyor' not in request.form:
+                is_surveyor = None
+            else:
+                is_surveyor = 'on'
             db.users.insert( \
                 {"username" : request.form['username'], \
                 "email" : request.form['email'], \
                 "pw_hash" : generate_password_hash(request.form['password']), \
-                "is_surveyor" : request.form['is_surveyor'] } \
+                "is_surveyor" : is_surveyor } \
             )
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))

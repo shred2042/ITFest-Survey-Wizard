@@ -1,32 +1,77 @@
-<!doctype html>
-<title>{% block title %}Welcome{% endblock %} | Survey Wizard</title>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<div class="page">
-  <h1>Survey Wizard</h1>
-  <div class="navigation">
-  {% if g.user %}
-    <a href="{{ url_for('logout') }}">Sign Out [{{ g.user.username }}]</a>
-    {% if g.user.is_surveyor %}
-    	<a href="{{ url_for('create_survey') }}">Create Survey</a>
-    {% endif %}
-  {% else %}
-    <a href="{{ url_for('register') }}">Register</a> |
-    <a href="{{ url_for('login') }}">Sign In</a>
-  {% endif %}
-  </div>
-  {% with flashes = get_flashed_messages() %}
-    {% if flashes %}
-      <ul class="flashes">
-      {% for message in flashes %}
-        <li>{{ message }}
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-  <div class="body">
-  {% block body %}{% endblock %}
-  </div>
-  <div class="footer">
-    Survey Wizard &mdash; A Flask Application
-  </div>
+{% extends "bootstrap/base.html" %}
+
+
+{% block head %}
+{{super()}}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block title %}Survey Wizard{% endblock %}
+
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
 </div>
+{% endblock %}
+
+{% block scripts %}
+  {{super()}}  
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+  <script type=text/javascript>
+    $(function() {
+      var $default_choice = "<div class='form-group'> \
+          <label for='question'>Question:</label> \
+          <input type='text' class='form-control' id='question'> \
+        </div> \
+        <div class='dropdown'> \
+          <button class='btn btn-primary dropdown-toggle' type='button' data-toggle='dropdown'>Question Type\
+          <span class='caret'></span></button> \
+          <ul class='dropdown-menu'> \
+            <li><a href='#'>HTML</a></li> \
+            <li><a href='#'>CSS</a></li> \
+            <li><a href='#'>JavaScript</a></li> \
+          </ul> \
+        </div>";
+      $( "#plus" ).click(function() {
+        $("#plus").before($default_choice);
+      });
+    });
+  </script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+{% endblock %}
+
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<link rel="stylesheet" href="static/style.css">
+{% endblock %}
+
+{% block content %}
+	<h1>Survey Wizard</h1>
+	<div class="navigation">
+	{% if g.user %}
+	  <a href="{{ url_for('logout') }}">Sign Out {{ g.user.username }}</a>
+	  {% if g.user.is_surveyor %}
+	  	<a href="{{ url_for('create_survey') }}">Create Survey</a>
+	  {% endif %}
+	{% else %}
+	  <a href="{{ url_for('register') }}">Register</a> |
+	  <a href="{{ url_for('login') }}">Sign In</a>
+	{% endif %}
+	</div>
+	{% with flashes = get_flashed_messages() %}
+	  {% if flashes %}
+	    <ul class="flashes">
+	    {% for message in flashes %}
+	      <li>{{ message }}
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{% endblock %}

@@ -1,6 +1,29 @@
 {% extends "index.html" %}
 {% block title %}Sign Up{% endblock %}
 {% block body %}
+
+  <h1>Survey Wizard</h1>
+  <div class="navigation">
+  {% if g.user %}
+    <a href="{{ url_for('logout') }}">Sign Out {{ g.user.username }}</a>
+    {% if g.user.is_surveyor %}
+      <a href="{{ url_for('create_survey') }}">Create Survey</a>
+    {% endif %}
+  {% else %}
+    <a href="{{ url_for('register') }}">Register</a> |
+    <a href="{{ url_for('login') }}">Sign In</a>
+  {% endif %}
+  </div>
+  {% with flashes = get_flashed_messages() %}
+    {% if flashes %}
+      <ul class="flashes">
+      {% for message in flashes %}
+        <li>{{ message }}
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  
   <h2>Sign Up</h2>
   {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
   <form action="" method="post">

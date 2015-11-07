@@ -1,12 +1,68 @@
 {% extends "index.html" %}
 {% block title %}Create Survey{% endblock %}
+
 {% block body %}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+  <script type=text/javascript>
+    $(function() {
+      var $default_choice = "<div class='form-group'> \
+          <label for='question'>Question:</label> \
+          <input type='text' class='form-control' id='question'> \
+        </div> \
+        <div class='dropdown'> \
+          <button class='btn btn-primary dropdown-toggle' type='button' data-toggle='dropdown'>Question Type\
+          <span class='caret'></span></button> \
+          <ul class='dropdown-menu'> \
+            <li><a href='#'>HTML</a></li> \
+            <li><a href='#'>CSS</a></li> \
+            <li><a href='#'>JavaScript</a></li> \
+          </ul> \
+        </div>";
+      $( "#plus" ).click(function() {
+        $("#plus").before($default_choice);
+      });
+    });
+  </script>
+  <h1>Survey Wizard</h1>
+  <div class="navigation">
+  <div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Tutorials
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">HTML</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CSS</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">JavaScript</a></li>
+      <li role="presentation" class="divider"></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">About Us</a></li>
+    </ul>
+  </div>
+  {% if g.user %}
+    <a href="{{ url_for('logout') }}">Sign Out {{ g.user.username }}</a>
+    {% if g.user.is_surveyor %}
+      <a href="{{ url_for('create_survey') }}">Create Survey</a>
+    {% endif %}
+  {% else %}
+    <a href="{{ url_for('register') }}">Register</a> |
+    <a href="{{ url_for('login') }}">Sign In</a>
+  {% endif %}
+  </div>
+  {% with flashes = get_flashed_messages() %}
+    {% if flashes %}
+      <ul class="flashes">
+      {% for message in flashes %}
+        <li>{{ message }}
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
   <h2>Create Survey</h2>
   {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
   <form action="" method="post">
     <dl>
       <dt>Add your questions here.
-      <dd><input type="button" name="add_button" value="+" size="30">
+      <dd><input type="button" name="add_button" value="+" id="plus" size="30">
     </dl>
     <div class="actions"><input type="submit" value="Finish"></div>
   </form>
